@@ -1,4 +1,4 @@
-import { useState, InputHTMLAttributes, forwardRef, ReactNode } from 'react'
+import { useState, forwardRef, type InputHTMLAttributes } from 'react'
 import { cn } from '@/utils'
 import { EyeOpenIcon } from '@radix-ui/react-icons'
 import { EyeClosedIcon } from '@radix-ui/react-icons'
