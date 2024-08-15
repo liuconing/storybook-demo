@@ -644,6 +644,7 @@ const DateTimePicker = React.forwardRef<DateTimePickerRef, DateTimePickerProps>(
     },
     ref
   ) => {
+    console.log(locale)
     const [month, setMonth] = React.useState<Date>(value ?? new Date())
     const buttonRef = useRef<HTMLButtonElement>(null)
     /**
@@ -651,16 +652,17 @@ const DateTimePicker = React.forwardRef<DateTimePickerRef, DateTimePickerProps>(
      * instead of resetting to 00:00
      */
     const handleSelect = (newDay: Date | undefined) => {
+      console.log(locale)
       if (!newDay) return
       if (!value) {
-        if (granularity === 'day') onChange?.(newDay)
+        onChange?.(newDay)
         setMonth(newDay)
         return
       }
       const diff = newDay.getTime() - value.getTime()
       const diffInDays = diff / (1000 * 60 * 60 * 24)
       const newDateFull = add(value, { days: Math.ceil(diffInDays) })
-      if (granularity === 'day') onChange?.(newDateFull)
+      onChange?.(newDateFull)
       setMonth(newDateFull)
     }
 
@@ -711,7 +713,6 @@ const DateTimePicker = React.forwardRef<DateTimePickerRef, DateTimePickerProps>(
           {granularity !== 'day' && (
             <div className='border-t border-border p-3'>
               <TimePicker onChange={onChange} date={value} hourCycle={hourCycle} granularity={granularity} />
-              <Button onClick={() => handleSelect(month)}>OK</Button>
             </div>
           )}
         </PopoverContent>

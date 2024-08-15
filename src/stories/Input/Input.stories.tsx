@@ -34,7 +34,6 @@ const meta: Meta<typeof Input> = {
     suffixIcon: {
       control: 'radio',
       options: {
-        None: null,
         HeartFilled: <HeartFilledIcon />,
         Update: <UpdateIcon />,
       },
