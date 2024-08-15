@@ -1,6 +1,6 @@
 import React from 'react'
-import { Checkbox as CheckboxItem } from '@/components/ui/Checkbox'
-import { Label } from '@/components/ui/Label'
+import { Checkbox as CheckboxItem } from '@/components/ui/checkbox'
+import { Label } from '@/components/ui/label'
 
 interface CheckboxProps extends React.ComponentPropsWithoutRef<typeof CheckboxItem> {
   label: string
