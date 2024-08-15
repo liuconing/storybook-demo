@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react'
+import { fn } from '@storybook/test'
 import { DateTimePicker } from './DatePick'
-import { HeartFilledIcon, UpdateIcon } from '@radix-ui/react-icons'
 
 const meta: Meta<typeof DateTimePicker> = {
   title: 'Components/DateTimePicker',
@@ -19,6 +19,7 @@ const meta: Meta<typeof DateTimePicker> = {
     value: { control: 'date', description: '日期時間' },
     onChange: { action: 'onChange', description: '日期時間改變時觸發' },
   },
+  args: { onChange: fn() },
 }
 
 export default meta
@@ -27,16 +28,18 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
+    granularity: 'day',
+  },
+}
+
+export const HourCycle12: Story = {
+  args: {
     hourCycle: 12,
-    value: undefined,
-    onChange: () => {},
   },
 }
 
 export const HourCycle24: Story = {
   args: {
     hourCycle: 24,
-    value: undefined,
-    onChange: () => {},
   },
 }

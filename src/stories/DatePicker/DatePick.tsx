@@ -435,23 +435,34 @@ const TimePickerInput = React.forwardRef<HTMLInputElement, TimePickerInputProps>
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Tab') return
+
       e.preventDefault()
       if (e.key === 'ArrowRight') onRightFocus?.()
+
       if (e.key === 'ArrowLeft') onLeftFocus?.()
+
       if (['ArrowUp', 'ArrowDown'].includes(e.key)) {
         const step = e.key === 'ArrowUp' ? 1 : -1
         const newValue = getArrowByType(calculatedValue, step, picker)
+
         if (flag) setFlag(false)
+
         const tempDate = date ? new Date(date) : new Date()
+
         onDateChange?.(setDateByType(tempDate, newValue, picker, period))
       }
+
       if (e.key >= '0' && e.key <= '9') {
         if (picker === '12hours') setPrevIntKey(e.key)
 
         const newValue = calculateNewValue(e.key)
+
         if (flag) onRightFocus?.()
+
         setFlag((prev) => !prev)
+
         const tempDate = date ? new Date(date) : new Date()
+
         onDateChange?.(setDateByType(tempDate, newValue, picker, period))
       }
     }
@@ -642,14 +653,14 @@ const DateTimePicker = React.forwardRef<DateTimePickerRef, DateTimePickerProps>(
     const handleSelect = (newDay: Date | undefined) => {
       if (!newDay) return
       if (!value) {
-        onChange?.(newDay)
+        if (granularity === 'day') onChange?.(newDay)
         setMonth(newDay)
         return
       }
       const diff = newDay.getTime() - value.getTime()
       const diffInDays = diff / (1000 * 60 * 60 * 24)
       const newDateFull = add(value, { days: Math.ceil(diffInDays) })
-      onChange?.(newDateFull)
+      if (granularity === 'day') onChange?.(newDateFull)
       setMonth(newDateFull)
     }
 
@@ -700,6 +711,7 @@ const DateTimePicker = React.forwardRef<DateTimePickerRef, DateTimePickerProps>(
           {granularity !== 'day' && (
             <div className='border-t border-border p-3'>
               <TimePicker onChange={onChange} date={value} hourCycle={hourCycle} granularity={granularity} />
+              <Button onClick={() => handleSelect(month)}>OK</Button>
             </div>
           )}
         </PopoverContent>

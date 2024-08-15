@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react'
 import { Input } from './Input'
 import { HeartFilledIcon, UpdateIcon } from '@radix-ui/react-icons'
 
@@ -13,12 +13,11 @@ const meta: Meta<typeof Input> = {
     type: {
       control: 'select',
       options: ['text', 'password', 'email', 'number', 'tel', 'url', 'search'],
-      description: '輸入框類型',
-      default: 'text',
+      description: 'input 類型',
       type: 'string',
     },
     placeholder: { control: 'text', description: '提示文字' },
-    disabled: { control: 'boolean', type: 'boolean', defaultValue: false, description: '是否禁用' },
+    disabled: { control: 'boolean', type: 'boolean', description: '是否禁用' },
     value: { control: 'text', type: 'string', description: '輸入框的值' },
     maxLength: { control: 'number', type: 'number', description: '最大長度' },
     minLength: { control: 'number', type: 'number', description: '最小長度' },
@@ -30,7 +29,7 @@ const meta: Meta<typeof Input> = {
         Update: <UpdateIcon />,
       },
       description: '前置圖案',
-      type: 'ReactNode',
+      type: 'ReactNode | SVGSVGElement',
     } as any,
     suffixIcon: {
       control: 'radio',
@@ -40,7 +39,27 @@ const meta: Meta<typeof Input> = {
         Update: <UpdateIcon />,
       },
       description: '後置圖案',
-      type: 'ReactNode',
+      type: 'ReactNode | SVGSVGElement',
+    } as any,
+    addonAfter: {
+      control: 'radio',
+      options: {
+        None: null,
+        '%': '%',
+        元: '元',
+      },
+      description: '後置標誌',
+      type: 'ReactNode | string',
+    } as any,
+    addonBefore: {
+      control: 'radio',
+      options: {
+        None: null,
+        '%': '%',
+        '＄': '＄',
+      },
+      description: '前置標誌',
+      type: 'ReactNode | string',
     } as any,
   },
 }
@@ -76,6 +95,22 @@ export const SuffixIcon: Story = {
     type: 'text',
     placeholder: '請输入文字...',
     suffixIcon: <HeartFilledIcon />,
+  },
+}
+
+export const AddonBefore: Story = {
+  args: {
+    type: 'number',
+    placeholder: '請输入文字...',
+    addonBefore: '＄',
+  },
+}
+
+export const AddonAfter: Story = {
+  args: {
+    type: 'number',
+    placeholder: '請输入文字...',
+    addonAfter: '元',
   },
 }
 
