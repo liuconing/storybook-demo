@@ -644,7 +644,6 @@ const DateTimePicker = React.forwardRef<DateTimePickerRef, DateTimePickerProps>(
     },
     ref
   ) => {
-    console.log(locale)
     const [month, setMonth] = React.useState<Date>(value ?? new Date())
     const buttonRef = useRef<HTMLButtonElement>(null)
     /**
@@ -652,7 +651,6 @@ const DateTimePicker = React.forwardRef<DateTimePickerRef, DateTimePickerProps>(
      * instead of resetting to 00:00
      */
     const handleSelect = (newDay: Date | undefined) => {
-      console.log(locale)
       if (!newDay) return
       if (!value) {
         onChange?.(newDay)
