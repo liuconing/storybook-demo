@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Input } from './Input'
-import { HeartFilledIcon, UpdateIcon } from '@radix-ui/react-icons'
+import { Input, InputPassword, InputAddonBox } from './Input'
 
 const meta: Meta<typeof Input> = {
   title: 'Components/Input',
@@ -10,56 +9,7 @@ const meta: Meta<typeof Input> = {
     layout: 'centered',
   },
   argTypes: {
-    type: {
-      control: 'select',
-      options: ['text', 'password', 'email', 'number', 'tel', 'url', 'search'],
-      description: 'input 類型',
-      type: 'string',
-    },
-    placeholder: { control: 'text', description: '提示文字' },
     disabled: { control: 'boolean', type: 'boolean', description: '是否禁用' },
-    value: { control: 'text', type: 'string', description: '輸入框的值' },
-    maxLength: { control: 'number', type: 'number', description: '最大長度' },
-    minLength: { control: 'number', type: 'number', description: '最小長度' },
-    prefixIcon: {
-      control: 'radio',
-      options: {
-        None: null,
-        HeartFilled: <HeartFilledIcon />,
-        Update: <UpdateIcon />,
-      },
-      description: '前置圖案',
-      type: 'ReactNode | SVGSVGElement',
-    } as any,
-    suffixIcon: {
-      control: 'radio',
-      options: {
-        HeartFilled: <HeartFilledIcon />,
-        Update: <UpdateIcon />,
-      },
-      description: '後置圖案',
-      type: 'ReactNode | SVGSVGElement',
-    } as any,
-    addonAfter: {
-      control: 'radio',
-      options: {
-        None: null,
-        '%': '%',
-        元: '元',
-      },
-      description: '後置標誌',
-      type: 'ReactNode | string',
-    } as any,
-    addonBefore: {
-      control: 'radio',
-      options: {
-        None: null,
-        '%': '%',
-        '＄': '＄',
-      },
-      description: '前置標誌',
-      type: 'ReactNode | string',
-    } as any,
   },
 }
 
@@ -72,6 +22,9 @@ export const Default: Story = {
     type: 'text',
     placeholder: '請输入文字...',
   },
+  render: (args) => {
+    return <Input {...args} />
+  },
 }
 
 export const Number: Story = {
@@ -79,29 +32,17 @@ export const Number: Story = {
     type: 'number',
     placeholder: '0',
   },
-}
-
-export const PrefixIcon: Story = {
-  args: {
-    type: 'text',
-    placeholder: '請输入文字...',
-    prefixIcon: <HeartFilledIcon />,
+  render: (args) => {
+    return <Input {...args} />
   },
 }
 
-export const SuffixIcon: Story = {
+export const Password: Story = {
   args: {
-    type: 'text',
-    placeholder: '請输入文字...',
-    suffixIcon: <HeartFilledIcon />,
+    placeholder: '請輸入密碼',
   },
-}
-
-export const AddonBefore: Story = {
-  args: {
-    type: 'number',
-    placeholder: '請输入文字...',
-    addonBefore: '＄',
+  render: (args) => {
+    return <InputPassword {...args} />
   },
 }
 
@@ -109,9 +50,59 @@ export const AddonAfter: Story = {
   args: {
     type: 'number',
     placeholder: '請输入文字...',
-    addonAfter: '元',
+  },
+  render: (args) => {
+    return (
+      <div className='flex item'>
+        <Input className='border-r-0 shadow-0 rounded-r-none' type='text' />
+        <InputAddonBox position='after'>元</InputAddonBox>
+      </div>
+    )
   },
 }
+
+// export const PrefixIcon: Story = {
+//   args: {
+//     type: 'text',
+//     placeholder: '請输入文字...',
+//   },
+//   render: (args) => {
+//     return (
+//       <Input>
+//         <Input {...args} />
+//       </Input>
+//     )
+//   },
+// }
+
+// export const SuffixIcon: Story = {
+//   args: {
+//     type: 'text',
+//     placeholder: '請输入文字...',
+//   },
+//   render: (args) => {
+//     return (
+//       <Input>
+//         <Input {...args} />
+//       </Input>
+//     )
+//   },
+// }
+
+// export const AddonBefore: Story = {
+//   args: {
+//     type: 'number',
+//     placeholder: '請输入文字...',
+//     addonBefore: '＄',
+//   },
+//   render: (args) => {
+//     return (
+//       <Input>
+//         <Input {...args} />
+//       </Input>
+//     )
+//   },
+// }
 
 export const Search: Story = {
   args: {
@@ -120,17 +111,14 @@ export const Search: Story = {
   },
 }
 
-export const Password: Story = {
-  args: {
-    type: 'password',
-    placeholder: '請輸入密碼',
-  },
-}
-
 export const Disabled: Story = {
-  args: {
-    type: 'text',
-    placeholder: '不可輸入',
-    disabled: true,
+  args: {},
+  render: (args) => {
+    return (
+      <>
+        <Input {...args} />
+        <InputAddonBox position='after'>元</InputAddonBox>
+      </>
+    )
   },
 }
