@@ -17,13 +17,19 @@ const inputDefaultStyle = cn(
 )
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(function InputField(
-  { className, type = 'text', status = 'default', ...props },
+  { className, disabled = false, type = 'text', status = 'default', ...props },
   ref
 ) {
   return (
     <input
       type={type}
-      className={cn(inputDefaultStyle, status === 'error' && 'border-rose-500', className)}
+      className={cn(
+        inputDefaultStyle,
+        disabled && 'cursor-not-allowed opacity-50 bg-muted',
+        status === 'error' && 'border-rose-500',
+        className
+      )}
+      disabled={disabled}
       ref={ref}
       {...props}
     />
@@ -33,9 +39,9 @@ Input.displayName = 'Input'
 
 interface InputPasswordProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {}
 
-/** 密碼 */
+/** 密碼 input */
 const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(function InputPassword(
-  { className, ...props },
+  { className, disabled = false, ...props },
   ref
 ) {
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false)
@@ -45,11 +51,12 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(fun
   }, [])
 
   return (
-    <div className={cn(inputDefaultStyle, className)}>
+    <div className={cn(inputDefaultStyle, className, disabled && 'cursor-not-allowed opacity-50 bg-muted')}>
       <input
         type={isPasswordVisible ? 'text' : 'password'}
         className={cn('bg-transparent outline-none text-base w-full h-full px-3 py-1 disabled:cursor-not-allowed')}
         ref={ref}
+        disabled={disabled}
         {...props}
       />
       <div className={cn('cursor-pointer pr-2', className)} onClick={togglePasswordVisibility} {...props}>
@@ -64,6 +71,7 @@ interface AddonProps extends React.HTMLAttributes<HTMLSpanElement> {
   position: 'before' | 'after'
 }
 
+/** Input Addon Box after 或 before */
 const InputAddonBox = ({ children, position, className, ...props }: AddonProps) => (
   <div
     className={cn(

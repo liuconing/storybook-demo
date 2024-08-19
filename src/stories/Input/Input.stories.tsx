@@ -112,13 +112,15 @@ export const Search: Story = {
 }
 
 export const Disabled: Story = {
-  args: {},
+  args: {
+    disabled: true,
+  },
   render: (args) => {
     return (
-      <>
+      <div className='flex'>
         <Input {...args} />
         <InputAddonBox position='after'>元</InputAddonBox>
-      </>
+      </div>
     )
   },
 }
