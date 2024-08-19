@@ -1,46 +1,68 @@
-import React from 'react'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Label } from '@/components/ui/label'
+import { createContext, useContext, ReactNode, forwardRef } from 'react'
+import { cn } from '@/lib/utils'
+import { Checkbox as CheckboxUI } from '@/components/ui/checkbox'
+import { Label as LabelUI } from '@/components/ui/label'
 
-export interface CheckboxOption {
-  id: string
-  label: string
-}
-
-interface CheckboxGroupProps {
-  options: CheckboxOption[]
+interface CheckboxGroupContextType {
   value: string[]
   onChange: (value: string[]) => void
-  label?: string
 }
 
-export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({ options, value, onChange, label }) => {
-  const handleCheckboxChange = (optionId: string, checked: boolean) => {
-    if (checked) {
-      onChange([...value, optionId])
+const CheckboxGroupContext = createContext<CheckboxGroupContextType | null>(null)
+
+interface CheckboxProps {
+  id: string
+  label: string
+  checked?: boolean
+  onChange?: (checked: boolean) => void
+  className?: string
+}
+
+export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(function Checkbox(
+  { id, label, checked, onChange, className },
+  ref
+) {
+  const groupContext = useContext(CheckboxGroupContext)
+
+  const handleChange = (isChecked: boolean) => {
+    if (groupContext) {
+      const newValue = isChecked ? [...groupContext.value, id] : groupContext.value.filter((itemId) => itemId !== id)
+      groupContext.onChange(newValue)
     } else {
-      onChange(value.filter((id) => id !== optionId))
+      onChange?.(isChecked)
     }
   }
 
+  const isChecked = groupContext ? groupContext.value.includes(id) : (checked ?? false)
+
   return (
-    <div className='space-y-2'>
-      {label && <Label className='text-base'>{label}</Label>}
-      {options.map((option) => (
-        <div key={option.id} className='flex items-center space-x-2'>
-          <Checkbox
-            id={option.id}
-            checked={value.includes(option.id)}
-            onCheckedChange={(checked) => handleCheckboxChange(option.id, checked as boolean)}
-          />
-          <Label
-            htmlFor={option.id}
-            className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
-          >
-            {option.label}
-          </Label>
-        </div>
-      ))}
+    <div className={cn('flex items-center space-x-2', className)}>
+      <CheckboxUI ref={ref} id={id} checked={isChecked} onCheckedChange={handleChange} />
+      <LabelUI
+        htmlFor={id}
+        className={cn('text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70')}
+      >
+        {label}
+      </LabelUI>
     </div>
+  )
+})
+
+interface CheckboxGroupProps {
+  value: string[]
+  onChange: (value: string[]) => void
+  children: ReactNode
+  label?: string
+  className?: string
+}
+
+export const CheckboxGroup = ({ value, onChange, children, label, className }: CheckboxGroupProps) => {
+  return (
+    <CheckboxGroupContext.Provider value={{ value, onChange }}>
+      <div className={cn('space-y-2', className)}>
+        {label && <LabelUI className='text-base'>{label}</LabelUI>}
+        {children}
+      </div>
+    </CheckboxGroupContext.Provider>
   )
 }
