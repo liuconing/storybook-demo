@@ -1,5 +1,6 @@
 import React from 'react'
 import { Meta, StoryObj } from '@storybook/react'
+import { fn } from '@storybook/test'
 import { Checkbox, CheckboxGroup } from './CheckboxGroup'
 
 const options = [
@@ -19,6 +20,7 @@ const meta: Meta<typeof CheckboxGroup> = {
   },
   args: {
     value: [],
+    onChange: (value: string[]) => console.log(value),
   },
 }
 
@@ -26,28 +28,18 @@ export default meta
 
 type Story = StoryObj<typeof CheckboxGroup>
 
-// export const Default: Story = {
-//   args: {
-//     label: '單獨的 Checkbox',
-//   },
-//   render: (args) => {
-//     const [isChecked, setIsChecked] = React.useState(false)
-//     return <Checkbox id='single-checkbox' checked={isChecked} onChange={setIsChecked} {...args} />
-//   },
-// }
-
 export const Default: Story = {
   args: {
     label: 'Checkbox 群組',
     value: [],
-    onChange: (value: string[]) => console.log(value),
+    onChange: fn(),
   },
   render: (args) => {
     const [selectedValues, setSelectedValues] = React.useState<string[]>(args.value)
 
     const handleChange = (value: string[]) => {
       setSelectedValues(value)
-      args.onChange(value) // 呼叫 args.onChange 並傳遞更新後的值
+      args.onChange(value)
     }
     return (
       <CheckboxGroup {...args} value={selectedValues} onChange={handleChange}>

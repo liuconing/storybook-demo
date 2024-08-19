@@ -1,29 +1,41 @@
+import React, { ReactNode, forwardRef } from 'react'
+import { cn } from '@/lib/utils'
 import { Label } from '@/components/ui/label'
 import * as RadioGroupPrimitive from '@radix-ui/react-radio-group'
 import { RadioGroup as RadioGroupContent, RadioGroupItem } from '@/components/ui/radio-group'
 
-export interface RadioOption {
-  id: string
+interface RadioProps extends React.ComponentPropsWithoutRef<typeof RadioGroupItem> {
+  label: string
   value: string
 }
 
-export interface RadioGroupProps extends React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root> {
-  options: RadioOption[]
+export const Radio = forwardRef<HTMLButtonElement, RadioProps>(function Radio(
+  { label, value, id, className, ...props },
+  ref
+) {
+  return (
+    <div className={cn('flex items-center space-x-2', className)}>
+      <RadioGroupItem ref={ref} value={value} id={id} {...props} />
+      <Label htmlFor={id}>{label}</Label>
+    </div>
+  )
+})
+
+interface RadioGroupProps
+  extends Omit<React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>, 'onValueChange'> {
+  value: string
+  onValueChange: (value: string) => void
+  children: ReactNode
   label?: string
-  defaultValue?: string
+  className?: string
 }
 
-export const RadioGroup = ({ label, options, defaultValue, ...props }: RadioGroupProps) => {
+export const RadioGroup = ({ value, onValueChange, children, label, className, ...props }: RadioGroupProps) => {
   return (
-    <div className='space-y-2'>
+    <div className={cn('space-y-2', className)}>
       {label && <Label className='text-base'>{label}</Label>}
-      <RadioGroupContent defaultValue={defaultValue} {...props}>
-        {options.map((item) => (
-          <div className='flex items-center space-x-2' key={item.id}>
-            <RadioGroupItem value={item.value} id={item.id} />
-            <Label htmlFor={item.id}>{item.value}</Label>
-          </div>
-        ))}
+      <RadioGroupContent value={value} onValueChange={onValueChange} {...props}>
+        {children}
       </RadioGroupContent>
     </div>
   )

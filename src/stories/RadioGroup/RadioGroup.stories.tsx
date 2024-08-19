@@ -1,7 +1,14 @@
 import React from 'react'
 import { Meta, StoryObj } from '@storybook/react'
 import { fn } from '@storybook/test'
-import { RadioGroup, RadioOption } from './RadioGroup'
+import { Radio, RadioGroup } from './RadioGroup'
+
+const options = [
+  { id: 'option1', value: '選項 1' },
+  { id: 'option2', value: '選項 2' },
+  { id: 'option3', value: '選項 3' },
+  { id: 'option4', value: '選項 4' },
+]
 
 const meta: Meta<typeof RadioGroup> = {
   title: 'Components/RadioGroup',
@@ -17,18 +24,18 @@ export default meta
 
 type Story = StoryObj<typeof RadioGroup>
 
-const options: RadioOption[] = [
-  { id: 'option1', value: '選項 1' },
-  { id: 'option2', value: '選項 2' },
-  { id: 'option3', value: '選項 3' },
-  { id: 'option4', value: '選項 4' },
-]
-
 export const Default: Story = {
-  render: (args) => {
-    return <RadioGroup {...args} options={options} />
-  },
   args: {
     label: 'Radio 群組',
+  },
+  render: (args) => {
+    const [selectedValue, setSelectedValue] = React.useState('option1')
+    return (
+      <RadioGroup {...args} value={selectedValue} onValueChange={setSelectedValue} label='選擇選項'>
+        {options.map((option) => (
+          <Radio key={option.id} id={option.id} value={option.value} label={option.value} />
+        ))}
+      </RadioGroup>
+    )
   },
 }
