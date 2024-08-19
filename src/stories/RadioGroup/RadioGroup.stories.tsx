@@ -13,6 +13,13 @@ const options = [
 const meta: Meta<typeof RadioGroup> = {
   title: 'Components/RadioGroup',
   component: RadioGroup,
+  parameters: {
+    docs: {
+      description: {
+        component: 'RadioGroup 是一個可以包含多個 Radio 的元件，用來讓使用者選擇一個選項。',
+      },
+    },
+  },
   argTypes: {
     label: { control: 'text' },
     onValueChange: { action: 'onValueChange', description: '選擇選項時觸發' },

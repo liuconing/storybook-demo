@@ -29,6 +29,13 @@ const options = [
 const meta: Meta<typeof Select> = {
   title: 'Components/Select',
   component: Select,
+  parameters: {
+    docs: {
+      description: {
+        component: 'Select 是一個可以讓使用者選擇的元件。',
+      },
+    },
+  },
   argTypes: {
     type: {
       control: 'radio',

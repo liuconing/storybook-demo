@@ -5,8 +5,12 @@ const meta: Meta<typeof Input> = {
   title: 'Components/Input',
   component: Input,
   parameters: {
-    // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
     layout: 'centered',
+    docs: {
+      description: {
+        component: 'Input 是一個可以讓使用者輸入文字的元件。',
+      },
+    },
   },
   argTypes: {
     disabled: { control: 'boolean', type: 'boolean', description: '是否禁用' },

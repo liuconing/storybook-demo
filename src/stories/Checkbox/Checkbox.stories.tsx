@@ -5,6 +5,13 @@ import { Checkbox } from './CheckboxGroup'
 const meta: Meta<typeof Checkbox> = {
   title: 'Components/Checkbox/Checkbox',
   component: Checkbox,
+  parameters: {
+    docs: {
+      description: {
+        component: 'Checkbox 是一個可以讓使用者勾選的元件。',
+      },
+    },
+  },
   argTypes: {
     checked: { control: 'boolean', description: '是否選中', default: false },
     label: { control: 'text', description: '選項名稱' },

@@ -8,7 +8,11 @@ const meta: Meta<typeof DateTimePicker> = {
   title: 'Components/DateTimePicker',
   component: DateTimePicker,
   parameters: {
-    // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
+    docs: {
+      description: {
+        component: 'DateTimePicker 是一個可以讓使用者選擇日期時間的元件。',
+      },
+    },
   },
   argTypes: {
     hourCycle: {

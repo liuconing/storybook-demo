@@ -13,6 +13,13 @@ const options = [
 const meta: Meta<typeof CheckboxGroup> = {
   title: 'Components/Checkbox/CheckboxGroup',
   component: CheckboxGroup,
+  parameters: {
+    docs: {
+      description: {
+        component: 'CheckboxGroup 是一個可以包含多個 Checkbox 的元件，用來讓使用者選擇多個選項。',
+      },
+    },
+  },
   argTypes: {
     label: { control: 'text' },
     value: { control: 'object' },
