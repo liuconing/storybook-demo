@@ -1,35 +1,9 @@
 import React from 'react'
 import { Meta, StoryObj } from '@storybook/react'
 import { Select } from './Select'
+import { fn } from '@storybook/test'
 
-const meta: Meta<typeof Select> = {
-  title: 'Components/Select',
-  component: Select,
-  argTypes: {
-    type: {
-      control: 'radio',
-      options: ['single', 'multiple'],
-      description: '選擇模式',
-      default: 'single',
-    },
-    showSearch: {
-      control: 'boolean',
-      description: '是否顯示搜尋框',
-      default: false,
-    },
-    options: { control: 'object', description: '選項' },
-    onChange: { action: 'onChange', description: '選擇選項時觸發' },
-  },
-  args: {
-    type: 'single',
-  },
-}
-
-export default meta
-
-type Story = StoryObj<typeof Select>
-
-const frameworks = [
+const options = [
   {
     value: 'next.js',
     label: 'Next.js',
@@ -52,9 +26,47 @@ const frameworks = [
   },
 ]
 
+const meta: Meta<typeof Select> = {
+  title: 'Components/Select',
+  component: Select,
+  argTypes: {
+    type: {
+      control: 'radio',
+      options: ['single', 'multiple'],
+      description: '選擇模式 single = 單選, multiple = 多選',
+      default: 'single',
+    },
+    showSearch: {
+      control: 'boolean',
+      description: '是否顯示搜尋框',
+      default: false,
+    },
+    disabled: { control: 'boolean', description: '是否禁用', default: false },
+    placeholder: { control: 'text', description: '輸入框的提示文字' },
+    searchPlaceholder: { control: 'text', description: '搜尋框的提示文字' },
+    onChange: { action: 'onChange', description: '選擇選項時觸發' },
+  },
+  args: {
+    type: 'single',
+    onChange: fn(),
+  },
+}
+
+export default meta
+
+type Story = StoryObj<typeof Select>
+
 export const Default: Story = {
   render: (args) => {
-    return <Select {...args} options={frameworks} />
+    return (
+      <Select {...args}>
+        {options.map((item) => (
+          <Select.Item key={item.label} value={item.value}>
+            {item.label}
+          </Select.Item>
+        ))}
+      </Select>
+    )
   },
 }
 
@@ -63,15 +75,49 @@ export const Multiple: Story = {
     type: 'multiple',
   },
   render: (args) => {
-    return <Select {...args} options={frameworks} />
+    return (
+      <Select {...args}>
+        {options.map((item) => (
+          <Select.Item key={item.label} value={item.value}>
+            {item.label}
+          </Select.Item>
+        ))}
+      </Select>
+    )
   },
 }
 
-export const showSearch: Story = {
+export const ShowSearch: Story = {
   args: {
     showSearch: true,
+    placeholder: '請選擇框架',
   },
   render: (args) => {
-    return <Select {...args} options={frameworks} />
+    return (
+      <Select {...args}>
+        {options.map((item) => (
+          <Select.Item key={item.label} value={item.value}>
+            {item.label}
+          </Select.Item>
+        ))}
+      </Select>
+    )
+  },
+}
+
+export const Disabled: Story = {
+  args: {
+    disabled: true,
+  },
+  render: (args) => {
+    return (
+      <Select {...args}>
+        {options.map((item) => (
+          <Select.Item key={item.label} value={item.value}>
+            {item.label}
+          </Select.Item>
+        ))}
+      </Select>
+    )
   },
 }
