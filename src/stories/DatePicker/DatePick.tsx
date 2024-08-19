@@ -14,23 +14,23 @@ import { enUS, Locale } from 'date-fns/locale'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { DayPicker } from 'react-day-picker'
 
-// ---------- utils start ----------
+// ---------- 工具函數開始 ----------
 /**
- * regular expression to check for valid hour format (01-23)
+ * 檢查是否為有效的小時格式（01-23）
  */
 function isValidHour(value: string) {
   return /^(0[0-9]|1[0-9]|2[0-3])$/.test(value)
 }
 
 /**
- * regular expression to check for valid 12 hour format (01-12)
+ * 檢查是否為有效的12小時制格式（01-12）
  */
 function isValid12Hour(value: string) {
   return /^(0[1-9]|1[0-2])$/.test(value)
 }
 
 /**
- * regular expression to check for valid minute format (00-59)
+ * 檢查是否為有效的分鐘格式（00-59）
  */
 function isValidMinuteOrSecond(value: string) {
   return /^[0-5][0-9]$/.test(value)
@@ -55,16 +55,29 @@ function getValidNumber(value: string, { max, min = 0, loop = false }: GetValidN
   return '00'
 }
 
+/**
+ * 獲取有效的小時值
+ * @param value - 24小時制值
+ * @returns
+ */
 function getValidHour(value: string) {
   if (isValidHour(value)) return value
   return getValidNumber(value, { max: 23 })
 }
 
+/**
+ * 獲取有效的12小時制值
+ * @param value - 12小時制值
+ */
 function getValid12Hour(value: string) {
   if (isValid12Hour(value)) return value
   return getValidNumber(value, { min: 1, max: 12 })
 }
 
+/**
+ * 獲取有效的分鐘或秒數值
+ * @param value - 分鐘或秒數值
+ */
 function getValidMinuteOrSecond(value: string) {
   if (isValidMinuteOrSecond(value)) return value
   return getValidNumber(value, { max: 59 })
@@ -85,6 +98,11 @@ function getValidArrowNumber(value: string, { min, max, step }: GetValidArrowNum
   return '00'
 }
 
+/**
+ * 獲取有效的箭頭小時值
+ * @param value - 小時值
+ * @param step - 步長值
+ */
 function getValidArrowHour(value: string, step: number) {
   return getValidArrowNumber(value, { min: 0, max: 23, step })
 }
@@ -125,6 +143,13 @@ function set12Hours(date: Date, value: string, period: Period) {
 type TimePickerType = 'minutes' | 'seconds' | 'hours' | '12hours'
 type Period = 'AM' | 'PM'
 
+/**
+ * 根據類型設置日期
+ * @param date - 日期對象
+ * @param value - 要設置的值
+ * @param type - 時間選擇器類型
+ * @param period - 週期（上午/下午）
+ */
 function setDateByType(date: Date, value: string, type: TimePickerType, period?: Period) {
   switch (type) {
     case 'minutes':
@@ -175,9 +200,9 @@ function getArrowByType(value: string, step: number, type: TimePickerType) {
 }
 
 /**
- * handles value change of 12-hour input
- * 12:00 PM is 12:00
- * 12:00 AM is 00:00
+ * 處理12小時制輸入值的變化
+ * 12:00 PM 是 12:00
+ * 12:00 AM 是 00:00
  */
 function convert12HourTo24Hour(hour: number, period: Period) {
   if (period === 'PM') {
@@ -194,9 +219,8 @@ function convert12HourTo24Hour(hour: number, period: Period) {
 }
 
 /**
- * time is stored in the 24-hour form,
- * but needs to be displayed to the user
- * in its 12-hour representation
+ * 時間以24小時制存儲，
+ * 但需要以12小時制顯示給用戶
  */
 function display12HourValue(hours: number) {
   if (hours === 0 || hours === 12) return '12'
@@ -220,8 +244,15 @@ function genYears(locale: Locale, yearRange = 50) {
   }))
 }
 
-// ---------- utils end ----------
+// ---------- 工具函數結束 ----------
 
+/**
+ * 日曆組件
+ * @param className - 額外的 CSS 類名
+ * @param classNames - 組件內部元件自定義 CSS 類名
+ * @param showOutsideDays - 是否顯示外部日期
+ * @param yearRange - 年份範圍
+ */
 function Calendar({
   className,
   classNames,
@@ -229,8 +260,8 @@ function Calendar({
   yearRange = 50,
   ...props
 }: CalendarProps & { yearRange?: number }) {
-  const MONTHS = React.useMemo(() => genMonths(props.locale || enUS), [])
-  const YEARS = React.useMemo(() => genYears(props.locale || enUS, yearRange), [])
+  const MONTHS = React.useMemo(() => genMonths(props.locale || enUS), [props.locale])
+  const YEARS = React.useMemo(() => genYears(props.locale || enUS, yearRange), [props.locale, yearRange])
 
   return (
     <DayPicker
@@ -328,6 +359,16 @@ interface PeriodSelectorProps {
   onLeftFocus?: () => void
 }
 
+/**
+ * 時間制選擇器
+ * @param period - 時間制 AM/PM
+ * @param setPeriod - 設置時間制
+ * @param date - 日期對象
+ * @param onDateChange - 日期更改時的回調函數
+ * @param onLeftFocus - 左焦點
+ * @param onRightFocus - 右焦點
+ * @param ref - ref
+ */
 const TimePeriodSelect = React.forwardRef<HTMLButtonElement, PeriodSelectorProps>(
   ({ period, setPeriod, date, onDateChange, onLeftFocus, onRightFocus }, ref) => {
     const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
@@ -339,8 +380,8 @@ const TimePeriodSelect = React.forwardRef<HTMLButtonElement, PeriodSelectorProps
       setPeriod?.(value)
 
       /**
-       * trigger an update whenever the user switches between AM and PM;
-       * otherwise user must manually change the hour each time
+       * 每當用戶在上午和下午之間切換時觸發更新；
+       * 否則，用戶必須手動更改小時
        */
       if (date) {
         const tempDate = new Date(date)
@@ -380,6 +421,25 @@ interface TimePickerInputProps extends React.InputHTMLAttributes<HTMLInputElemen
   onLeftFocus?: () => void
 }
 
+/**
+ * 時間選擇器輸入框
+ * @param picker - 時間選擇器類型 'minutes' | 'seconds' | 'hours' | '12hours'
+ * @param date - 日期對象
+ * @param onDateChange - 日期更改時的回調函數
+ * @param period - 時間制 'AM' | 'PM'
+ * @param onLeftFocus - 左焦點
+ * @param onRightFocus - 右焦點
+ * @param ref - ref
+ * @param className - 額外的 CSS 類名
+ * @param type - 輸入框類型
+ * @param value - 輸入框值
+ * @param id - 輸入框 ID
+ * @param name - 輸入框名稱
+ * @param onChange - 輸入框值更改時的回調函數
+ * @param onKeyDown - 輸入框按鍵按下時的回調函數
+ * @example <TimePickerInput picker='hours' date={date} onDateChange={setDate} period='AM' />
+ *
+ */
 const TimePickerInput = React.forwardRef<HTMLInputElement, TimePickerInputProps>(
   (
     {
@@ -404,8 +464,8 @@ const TimePickerInput = React.forwardRef<HTMLInputElement, TimePickerInputProps>
     const [prevIntKey, setPrevIntKey] = React.useState<string>('0')
 
     /**
-     * allow the user to enter the second digit within 2 seconds
-     * otherwise start again with entering first digit
+     * 允許用戶在2秒內輸入第二個數字
+     * 否則重新開始輸入第一個數字
      */
     React.useEffect(() => {
       if (flag) {
@@ -423,8 +483,8 @@ const TimePickerInput = React.forwardRef<HTMLInputElement, TimePickerInputProps>
 
     const calculateNewValue = (key: string) => {
       /*
-       * If picker is '12hours' and the first digit is 0, then the second digit is automatically set to 1.
-       * The second entered digit will break the condition and the value will be set to 10-12.
+       * 如果 picker 是 '12hours' 且第一個數字是 0，則第二個數字自動設為 1。
+       * 第二個輸入的數字將打破條件，並將值設置為 10-12。
        */
       if (picker === '12hours') {
         if (flag && calculatedValue.slice(1, 2) === '1' && prevIntKey === '0') return '0' + key
@@ -500,8 +560,8 @@ interface TimePickerProps {
   onChange?: (date: Date | undefined) => void
   hourCycle?: 12 | 24
   /**
-   * Determines the smallest unit that is displayed in the datetime picker.
-   * Default is 'second'.
+   * 確定在日期時間選擇器中顯示的最小單位。
+   * 預設為 'second'。
    * */
   granularity?: Granularity
 }
@@ -512,6 +572,14 @@ interface TimePickerRef {
   secondRef: HTMLInputElement | null
 }
 
+/**
+ * TimePicker 是一個時間選擇器，用於選擇時間。
+ * @param date - 日期對象
+ * @param onChange - 日期更改時的回調函數
+ * @param hourCycle - 12 或 24 小時制
+ * @param granularity - 選擇時間的範圍
+ * @example <TimePicker date={date} onChange={setDate} hourCycle={24} granularity='second' />
+ */
 const TimePicker = React.forwardRef<TimePickerRef, TimePickerProps>(
   ({ date, onChange, hourCycle = 24, granularity = 'second' }, ref) => {
     const minuteRef = React.useRef<HTMLInputElement>(null)
@@ -602,24 +670,24 @@ type DateTimePickerProps = {
   value?: Date
   onChange?: (date: Date | undefined) => void
   disabled?: boolean
-  /** showing `AM/PM` or not. */
+  /** 是否顯示 `AM/PM`。 */
   hourCycle?: 12 | 24
   placeholder?: string
   /**
-   * The year range will be: `This year + yearRange` and `this year - yearRange`.
-   * Default is 50.
-   * For example:
-   * This year is 2024, The year dropdown will be 1974 to 2024 which is generated by `2024 - 50 = 1974` and `2024 + 50 = 2074`.
+   * 年份範圍為：`今年 + yearRange` 和 `今年 - yearRange`。
+   * 預設為 50。
+   * 例如：
+   * 今年是 2024，年份下拉選單將為 1974 到 2024，這是由 `2024 - 50 = 1974` 和 `2024 + 50 = 2074` 生成的。
    * */
   yearRange?: number
   /**
-   * The format is derived from the `date-fns` documentation.
+   * 格式參考自 `date-fns` 文件。
    * @reference https://date-fns.org/v3.6.0/docs/format
    **/
   displayFormat?: { hour24?: string; hour12?: string }
   /**
-   * The granularity prop allows you to control the smallest unit that is displayed by DateTimePicker.
-   * By default, the value is `second` which shows all time inputs.
+   * granularity 屬性允許您控制 DateTimePicker 顯示的最小單位。
+   * 預設值為 `second`，顯示所有時間輸入。
    **/
   granularity?: Granularity
 } & Pick<CalendarProps, 'locale' | 'weekStartsOn' | 'showWeekNumber' | 'showOutsideDays'>
@@ -628,6 +696,20 @@ type DateTimePickerRef = {
   value?: Date
 } & Omit<HTMLButtonElement, 'value'>
 
+/**
+ * DateTimePicker 是一個日期時間選擇器，用於選擇日期和時間。
+ * 它包含一個日期選擇器和一個時間選擇器。
+ * @param value - 日期對象
+ * @param onChange - 日期更改時的回調函數
+ * @param disabled - 是否禁用日期時間選擇器
+ * @param hourCycle - 12 或 24 小時制
+ * @param yearRange - 年份範圍
+ * @param displayFormat - 日期時間格式
+ * @param granularity - 選擇時間的範圍
+ * @param placeholder - 日期時間選擇器的占位符
+ * @param locale - 地區設置
+ * @example <DateTimePicker value={date} onChange={setDate} placeholder='What‘s your birthday?' granularity='day' />
+ */
 const DateTimePicker = React.forwardRef<DateTimePickerRef, DateTimePickerProps>(
   (
     {
@@ -639,7 +721,7 @@ const DateTimePicker = React.forwardRef<DateTimePickerRef, DateTimePickerProps>(
       disabled = false,
       displayFormat,
       granularity = 'second',
-      placeholder = 'Pick a date',
+      placeholder = '選擇日期',
       ...props
     },
     ref
@@ -647,8 +729,8 @@ const DateTimePicker = React.forwardRef<DateTimePickerRef, DateTimePickerProps>(
     const [month, setMonth] = React.useState<Date>(value ?? new Date())
     const buttonRef = useRef<HTMLButtonElement>(null)
     /**
-     * carry over the current time when a user clicks a new day
-     * instead of resetting to 00:00
+     * 當用戶點擊新的日期時，保留當前時間
+     * 而不是重置為 00:00
      */
     const handleSelect = (newDay: Date | undefined) => {
       if (!newDay) return
