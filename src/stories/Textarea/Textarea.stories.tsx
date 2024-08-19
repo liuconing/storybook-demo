@@ -1,4 +1,3 @@
-import React from 'react'
 import { Meta, StoryObj } from '@storybook/react'
 import { Textarea } from './Textarea'
 import { fn } from '@storybook/test'
