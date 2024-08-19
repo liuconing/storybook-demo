@@ -4,6 +4,11 @@ import { cn } from '@/lib/utils'
 export interface TextareaProps
   extends DetailedHTMLProps<InputHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement> {}
 
+/**
+ * 文字區塊
+ * @param disabled 是否禁用
+ * @example <Textarea placeholder="Type something..." />
+ */
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(
   { className, disabled = false, ...props },
   ref

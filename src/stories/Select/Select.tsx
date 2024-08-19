@@ -24,6 +24,21 @@ interface SelectProps {
   searchPlaceholder?: string
 }
 
+/**
+ * 下拉選單
+ * @param type 單選/多選 'single' | 'multiple'
+ * @param showSearch 是否顯示搜尋框
+ * @param onChange 值改變時觸發
+ * @param children 子元素
+ * @param disabled 是否禁用
+ * @param placeholder 預設文字
+ * @param searchPlaceholder 搜尋框預設文字
+ * @example <Select type="single" showSearch onChange={handleChange} placeholder="Search...">
+ *            <Select.Item value="1">選項一</Select.Item>
+ *           <Select.Item value="2">選項二</Select.Item>
+ *          <Select.Item value="3">選項三</Select.Item>
+ *       </Select>
+ */
 const Select = ({ type = 'single', showSearch = false, onChange, children, disabled, ...props }: SelectProps) => {
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState<string[]>([])
@@ -89,6 +104,12 @@ interface SelectItemProps {
   children: React.ReactNode
 }
 
+/**
+ * 下拉選單選項
+ * @param value 值
+ * @param children 子元素
+ * @example <Select.Item value="1">選項一</Select.Item>
+ */
 const SelectItem = ({ value, children }: SelectItemProps) => {
   const context = useContext<SelectContextType | undefined>(SelectContext)
 
