@@ -1,6 +1,7 @@
 import React from 'react'
 import { Meta, StoryObj } from '@storybook/react'
 import { Textarea } from './Textarea'
+import { fn } from '@storybook/test'
 
 const meta: Meta<typeof Textarea> = {
   title: 'Components/Textarea',
@@ -34,7 +35,9 @@ export default meta
 type Story = StoryObj<typeof Textarea>
 
 export const Default: Story = {
-  args: {},
+  args: {
+    onChange: fn((e) => console.log(e.target.value)),
+  },
 }
 
 export const Disabled: Story = {
