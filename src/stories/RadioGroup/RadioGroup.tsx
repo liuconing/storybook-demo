@@ -9,6 +9,12 @@ interface RadioProps extends React.ComponentPropsWithoutRef<typeof RadioGroupIte
   value: string
 }
 
+/**
+ * 單選框
+ * @param label 標籤
+ * @param value 值
+ * @param id id
+ */
 export const Radio = forwardRef<HTMLButtonElement, RadioProps>(function Radio(
   { label, value, id, className, ...props },
   ref
@@ -30,6 +36,18 @@ interface RadioGroupProps
   className?: string
 }
 
+/**
+ * 單選框群組
+ * @param value 值
+ * @param onValueChange 值改變時觸發
+ * @param children 子元素
+ * @param label 標籤
+ * @example <RadioGroup value={value} onValueChange={setValue} label="單選框群組">
+ *             <Radio label="選項一" value="1" />
+ *             <Radio label="選項二" value="2" />
+ *             <Radio label="選項三" value="3" />
+ *          </RadioGroup>
+ */
 export const RadioGroup = ({ value, onValueChange, children, label, className, ...props }: RadioGroupProps) => {
   return (
     <div className={cn('space-y-2', className)}>
