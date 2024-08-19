@@ -16,6 +16,12 @@ const inputDefaultStyle = cn(
   'focus-within:outline-none focus-within:ring-1 focus-within:ring-ring focus-within:ring-slate-400'
 )
 
+/**
+ * 輸入框
+ * @param type 'text' | 'email' | 'number' | 'tel' | 'url' | 'search'
+ * @param status 'default' | 'error'
+ * @param disabled 是否禁用
+ */
 const Input = React.forwardRef<HTMLInputElement, InputProps>(function InputField(
   { className, disabled = false, type = 'text', status = 'default', ...props },
   ref
@@ -37,11 +43,17 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(function InputField
 })
 Input.displayName = 'Input'
 
-interface InputPasswordProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {}
+interface InputPasswordProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
+  status?: 'default' | 'error'
+}
 
-/** 密碼 input */
+/**
+ * 密碼 input
+ * @param disabled 是否禁用
+ * @param status 'default' | 'error'
+ * */
 const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(function InputPassword(
-  { className, disabled = false, ...props },
+  { className, disabled = false, status, ...props },
   ref
 ) {
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false)
@@ -51,7 +63,14 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(fun
   }, [])
 
   return (
-    <div className={cn(inputDefaultStyle, className, disabled && 'cursor-not-allowed opacity-50 bg-muted')}>
+    <div
+      className={cn(
+        inputDefaultStyle,
+        disabled && 'cursor-not-allowed opacity-50 bg-muted',
+        status === 'error' && 'border-rose-500',
+        className
+      )}
+    >
       <input
         type={isPasswordVisible ? 'text' : 'password'}
         className={cn('bg-transparent outline-none text-base w-full h-full px-3 py-1 disabled:cursor-not-allowed')}
@@ -71,7 +90,9 @@ interface AddonProps extends React.HTMLAttributes<HTMLSpanElement> {
   position: 'before' | 'after'
 }
 
-/** Input Addon Box after 或 before */
+/** Input Addon Box after 或 before
+ * @param position border顯示位置 'before' | 'after'
+ */
 const InputAddonBox = ({ children, position, className, ...props }: AddonProps) => (
   <div
     className={cn(
